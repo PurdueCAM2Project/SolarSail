@@ -2,28 +2,25 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 import sys
+import os
 import math
-from IPython.display import Image
 pi = math.pi
 
-def __main__(path):
+def __main__(path, extension):
   img = cv2.imread(path)
-  path = path.replace(".png", "") 
-  outOfFocus(img, path, 5)
-  gaussianBlur(img, path)
-  horizontalBlur(img, path, 5)
-  verticalBlur(img, path, 5)
-  boxBlur(img, path, 5)
-  medianBlur(img, path, 5) 
+  path = path.replace(extension, "") 
+  outOfFocus(img, path, extension, 5)
+  gaussianBlur(img, path, extension)
+  horizontalBlur(img, path, extension, 5)
+  verticalBlur(img, path, extension, 5)
+  boxBlur(img, path, extension, 5)
+  medianBlur(img, path, extension, 5) 
 
-def gaussianBlur(img, path): 
-  # Gaussian
-  # K1 = 11, K2 = 13
+def gaussianBlur(img, path, extension): 
   gausBlur = cv2.GaussianBlur(img, (11,11),0)  
-  cv2.imwrite(path + "_gaussianBlur.png", gausBlur)
+  cv2.imwrite(path + "_gaussianBlur" + extension, gausBlur)
   
-
-def outOfFocus(img, path, k):
+def outOfFocus(img, path, extension, k):
   kernel = np.zeros((k, k)) 
   r = k/2
   rSquared = r**2
@@ -35,39 +32,35 @@ def outOfFocus(img, path, k):
         kernel[x, y] = 1
   kernel /= (rSquared * pi)
   focus = cv2.filter2D(img, -1, kernel) 
-  cv2.imwrite(path + "_outofFocus.png", focus)
+  cv2.imwrite(path + "_outofFocus" + extension, focus)
   
-
-def horizontalBlur(img, path, k):
+def horizontalBlur(img, path, extension, k):
   kernel = np.zeros((k, k)) 
   kernel[int((k - 1)/2), :] = np.ones(k) 
   kernel /= k
   horizontal = cv2.filter2D(img, -1, kernel)
-  cv2.imwrite(path + "_horizontalBlur.png", horizontal)
+  cv2.imwrite(path + "_horizontalBlur" + extension, horizontal)
 
-def verticalBlur(img, path, k):
-  # Create the vertical kernel. 
+def verticalBlur(img, path, extension, k):
   kernel = np.zeros((k, k)) 
-  # Fill the middle row with ones. 
   kernel[:, int((k - 1)/2)] = np.ones(k)   
-  # Normalize. 
   kernel /= k   
-  # Apply the vertical kernel. 
   vertical = cv2.filter2D(img, -1, kernel) 
-  cv2.imwrite(path + "_verticalBlur.png", vertical)
+  cv2.imwrite(path + "_verticalBlur" + extension, vertical)
 
-def boxBlur(img, path, k): # Averaging/Box Blur
+def boxBlur(img, path, extension, k):
   kernel = np.ones((k,k),np.float32) / (k ** 2)
   avging = cv2.blur(img,(5,5)) 
-  cv2.imwrite(path + "_boxBlur.png", avging)
+  cv2.imwrite(path + "_boxBlur" + extension, avging)
 
-def medianBlur(img, path, k):
-  # Median blurring (not used in paper)
+def medianBlur(img, path, extension, k):
   medBlur = cv2.medianBlur(img,k)
-  cv2.imwrite(path + "_medianBlur.png", medBlur)
+  cv2.imwrite(path + "_medianBlur" + extension, medBlur)
 
 if __name__ == "__main__":
   path = input("Enter the path of the image on which blurring should be applied: ")
   if path == "":
     path = "sample_input.png"
-  __main__(path) 
+  extension = os.path.splitext(path)[1]
+  print(extension)
+  __main__(path, extension)
