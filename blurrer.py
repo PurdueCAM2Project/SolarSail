@@ -58,9 +58,7 @@ def medianBlur(img, path, extension, k):
   cv2.imwrite(path + "_medianBlur" + extension, medBlur)
 
 if __name__ == "__main__":
-  path = input("Enter the path of the image on which blurring should be applied: ")
-  if path == "":
-    path = "sample_input.png"
+  path = "images/sample_input.png"
   extension = os.path.splitext(path)[1]
   print(extension)
   __main__(path, extension)
