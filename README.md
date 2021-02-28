@@ -28,5 +28,3 @@ cd SolarSail
 | [distortion_correction](distortion_correction) | distortion_correction |
 | [image_compression](image_compression) | image_compression |
 | [sample_images](sample_images) | sample_images |
-
-Hello
